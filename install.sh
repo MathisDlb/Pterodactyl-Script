@@ -465,7 +465,7 @@ install_pterodactyl() {
     mkdir -p /var/www/pterodactyl
     cd /var/www/pterodactyl
     curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/download/v1.0.0-rc.6/panel.tar.gz
-    tar --strip-components=1 -xzvf panel.tar.gz
+    tar -xzvf panel.tar.gz
     chmod -R 755 storage/* bootstrap/cache/
 
     output "Installing Pterodactyl..."
@@ -473,7 +473,7 @@ install_pterodactyl() {
     cp .env.example .env
     /usr/local/bin/composer install --no-dev --optimize-autoloader
     php artisan key:generate --force
-    php artisan p:environment:setup -n --author=$email --url=https://$FQDN --timezone=America/New_York --cache=redis --session=database --queue=redis --redis-host=127.0.0.1 --redis-pass= --redis-port=6379
+    php artisan p:environment:setup -n --author=$email --url=https://$FQDN --timezone=Europe/Paris --cache=redis --session=database --queue=redis --redis-host=127.0.0.1 --redis-pass= --redis-port=6379
     php artisan p:environment:database --host=127.0.0.1 --port=3306 --database=panel --username=pterodactyl --password=$password
     output "To use PHP's internal mail sending, select [mail]. To use a custom SMTP server, select [smtp]. TLS Encryption is recommended."
     php artisan p:environment:mail
@@ -547,7 +547,8 @@ EOF
 upgrade_pterodactyl(){
     cd /var/www/pterodactyl
     php artisan down
-    curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/download/v1.0.0-rc.6/panel.tar.gz | tar --strip-components=1 -xzv
+    curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/download/v1.0.0-rc.6/panel.tar.gz
+    tar -xzvf panel.tar.gz
     chmod -R 755 storage/* bootstrap/cache
     composer install --no-dev --optimize-autoloader
     php artisan view:clear
